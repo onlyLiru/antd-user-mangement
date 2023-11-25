@@ -66,7 +66,7 @@ const UserManagement: React.FC = () => {
     const newData: Item = {
       key,
       name: `亚历山大 ${key} 世`,
-      age: 32,
+      age: Math.floor(Math.random() * 100),
       address: getAddress(key),
     };
     setData([...data, newData]);

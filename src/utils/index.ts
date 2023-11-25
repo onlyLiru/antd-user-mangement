@@ -15,7 +15,7 @@ export const getOriginData = () => {
     originData.push({
       key: i,
       name: `亚历山大 ${i + 1} 世`,
-      age: 32,
+      age: Math.floor(Math.random() * 100),
       address: getAddress(i),
     });
   }
