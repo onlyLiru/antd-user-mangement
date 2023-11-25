@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import type { Item } from "../types";
-import { Form, Table, Button } from "antd";
+import { Form, Table, Button, Flex, Space, Input, notification } from "antd";
+import type { SearchProps } from "antd/es/input";
 import EditableCell from "../components/EditableCell";
 import { getOriginData, mergeColumns, getAddress } from "../utils";
 import useColumns from "../hooks/useColumns";
+
+const { Search } = Input;
 
 const originData = getOriginData();
 
 const UserManagement: React.FC = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
+  const [fullData, setFullData] = useState(originData);
 
   const [editingKey, setEditingKey] = useState<number | undefined>();
 
@@ -22,7 +26,9 @@ const UserManagement: React.FC = () => {
 
   const deleteItem = (record: Partial<Item> & { key: React.Key }) => {
     const newData = data.filter((item) => item.key !== record.key);
+    const newFullData = fullData.filter((item) => item.key !== record.key);
     setData(newData);
+    setFullData(newFullData);
   };
   const cancel = () => {
     setEditingKey(undefined);
@@ -56,7 +62,7 @@ const UserManagement: React.FC = () => {
   const mergedColumns = mergeColumns(columns, isEditing);
 
   const handleAdd = () => {
-    const key = data.length + 1;
+    const key = fullData.length + 1;
     const newData: Item = {
       key,
       name: `亚历山大 ${key} 世`,
@@ -64,6 +70,21 @@ const UserManagement: React.FC = () => {
       address: getAddress(key),
     };
     setData([...data, newData]);
+    setFullData([...fullData, newData]);
+  };
+
+  const onSearch: SearchProps["onSearch"] = (value) => {
+    const filterData = fullData.filter(
+      (item) => item.name.indexOf(value.trim()) !== -1
+    );
+    setData(filterData);
+  };
+
+  const openNotificationWithIcon = () => {
+    notification.success({
+      message: "感谢您花时间浏览我的作品",
+      description: "一句先苦后甜 苦了我一年又一年下句. 那请问下一句是神马呢？",
+    });
   };
 
   return (
@@ -77,9 +98,24 @@ const UserManagement: React.FC = () => {
       }}
     >
       <div style={{ width: "80vw" }}>
-        <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-          新增用户
-        </Button>
+        <Flex justify="space-between">
+          <Button
+            onClick={handleAdd}
+            type="primary"
+            style={{ marginBottom: 16 }}
+          >
+            新增用户
+          </Button>
+          <Space style={{ marginBottom: 16 }}>
+            <Button onClick={openNotificationWithIcon}>Click Me</Button>
+            <Search
+              placeholder="输入人名搜索"
+              allowClear
+              enterButton="人名搜索"
+              onSearch={onSearch}
+            />
+          </Space>
+        </Flex>
         <Form form={form} component={false}>
           <Table
             components={{

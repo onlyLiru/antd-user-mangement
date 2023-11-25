@@ -21,18 +21,41 @@ const useColumns = ({ isEditing, save, cancel, deleteItem, edit }: IProps) => {
       dataIndex: "name",
       width: "25%",
       editable: true,
+      filters: [
+        {
+          text: "大 1 世",
+          value: "1",
+        },
+        {
+          text: "大 3 世",
+          value: "3",
+        },
+      ],
+      onFilter: (value: string, record) => record.name.indexOf(value) !== -1,
     },
     {
       title: "年龄",
       dataIndex: "age",
       width: "15%",
       editable: true,
+      sorter: (a, b) => a.age - b.age,
     },
     {
       title: "地址",
       dataIndex: "address",
       width: "40%",
       editable: true,
+      filters: [
+        {
+          text: "后宫 1 院",
+          value: "后宫 1 院",
+        },
+        {
+          text: "后宫 3 院",
+          value: "后宫 3 院",
+        },
+      ],
+      onFilter: (value: string, record) => record.address.indexOf(value) === 0,
     },
     {
       title: "操作",
